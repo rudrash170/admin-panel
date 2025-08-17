@@ -98,7 +98,7 @@ const appSlice = createSlice({
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.loading = false
-        const index = state.products.findIndex(p => p.id === action.payload.id)
+        const index = state.products.findIndex(p => p.product_id === action.payload.product_id)
         if (index !== -1) {
           state.products[index] = action.payload
         }
@@ -115,7 +115,7 @@ const appSlice = createSlice({
       })
       .addCase(deleteProduct.fulfilled, (state, action) => {
         state.loading = false
-        state.products = state.products.filter(p => p.id !== action.payload)
+        state.products = state.products.filter(p => p.product_id !== action.payload)
         state.error = null
       })
       .addCase(deleteProduct.rejected, (state, action) => {

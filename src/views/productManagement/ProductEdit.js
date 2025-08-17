@@ -27,7 +27,7 @@ const ProductEdit = () => {
 
   const { products, loading, error } = useSelector((state) => state)
   // Ensure id comparison works for string or numeric ids
-  const productToEdit = products.find((p) => String(p.id) === String(id))
+  const productToEdit = products.find((p) => String(p.product_id) === String(id))
 
   const [product, setProduct] = useState(null)
   const [imageFiles, setImageFiles] = useState([])
@@ -79,7 +79,7 @@ const ProductEdit = () => {
         const uploadedUrls = []
         for (const file of imageFiles) {
           // dispatch the thunk and unwrap to get the returned payload (publicUrl)
-          const action = await dispatch(productActions.uploadImage({ file, productId: product.id }))
+          const action = await dispatch(productActions.uploadImage({ file, productId: product.product_id }))
           // action may be a fulfilled action; payload contains the result
           const url = action.payload || action
           uploadedUrls.push(url)
@@ -90,10 +90,10 @@ const ProductEdit = () => {
         setProduct({ ...product, photos: allImages })
 
         // Update product with new images (unwrap payload if needed)
-        await dispatch(productActions.updateProduct({ id: product.id, productData: { photos: allImages } }))
+        await dispatch(productActions.updateProduct({ id: product.product_id, productData: { photos: allImages } }))
       } else {
         // Update product without new images
-        await dispatch(productActions.updateProduct({ id: product.id, productData: product }))
+        await dispatch(productActions.updateProduct({ id: product.product_id, productData: product }))
       }
       
       alert('Product saved successfully!')
@@ -137,6 +137,17 @@ const ProductEdit = () => {
             )}
             
             <CForm onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <CFormLabel htmlFor="sku">SKU (Stock Keeping Unit)</CFormLabel>
+                <CFormInput 
+                  type="text" 
+                  id="sku" 
+                  value={product.sku || ''} 
+                  onChange={handleChange}
+                  placeholder="Enter unique SKU (e.g., RBY-2.5CT-OV-001)"
+                />
+              </div>
+
               <div className="mb-3">
                 <CFormLabel htmlFor="name">Product Name</CFormLabel>
                 <CFormInput type="text" id="name" value={product.name} onChange={handleChange} />

@@ -66,6 +66,16 @@ const ProductList = () => {
                   </option>
                 ))}
               </CFormSelect>
+              <CButton 
+                as={Link} 
+                to="/product-management/csv-upload" 
+                color="info"
+                variant="outline"
+                size="sm" 
+                className="me-2"
+              >
+                Bulk Upload CSV
+              </CButton>
               <CButton as={Link} to="/product-management/add" size="sm">
                 Add New Item
               </CButton>
@@ -88,9 +98,12 @@ const ProductList = () => {
                 <table className="table table-hover">
                   <thead>
                     <tr>
-                      <th>Photo</th>
                       <th>SKU</th>
+                      <th>Photo</th>
                       <th>Name</th>
+                      <th>Carat</th>
+                      <th>Shape</th>
+                      <th>Color</th>
                       <th>Categories</th>
                       <th>Price</th>
                       <th>Actions</th>
@@ -98,7 +111,10 @@ const ProductList = () => {
                   </thead>
                   <tbody>
                     {filteredProducts.map((product) => (
-                      <tr key={product.id} style={{ height: '140px' }}>
+                      <tr key={product.product_id} style={{ height: '140px' }}>
+                        <td style={{ verticalAlign: 'middle', fontWeight: 'bold', fontSize: '0.9em' }}>
+                          {product.sku || 'N/A'}
+                        </td>
                         <td>
                           <div style={{ display: 'flex', gap: '10px' }}>
                             {product.photos && product.photos.length > 0 ? (
@@ -135,8 +151,10 @@ const ProductList = () => {
                             )}
                           </div>
                         </td>
-                        <td style={{ verticalAlign: 'middle' }}>{product.sku}</td>
                         <td style={{ verticalAlign: 'middle' }}>{product.name}</td>
+                        <td style={{ verticalAlign: 'middle' }}>{product.carat || '-'}</td>
+                        <td style={{ verticalAlign: 'middle' }}>{product.shape || '-'}</td>
+                        <td style={{ verticalAlign: 'middle' }}>{product.color || '-'}</td>
                         <td style={{ verticalAlign: 'middle' }}>
                           {product.categories?.map((cat, idx) => (
                             <span 
@@ -152,7 +170,7 @@ const ProductList = () => {
                         <td style={{ verticalAlign: 'middle' }}>
                           <CButton
                             as={Link}
-                            to={`/product-management/edit/${product.id}`}
+                            to={`/product-management/edit/${product.product_id}`}
                             size="sm"
                             color="primary"
                             className="me-2"
@@ -162,7 +180,7 @@ const ProductList = () => {
                           <CButton 
                             size="sm" 
                             color="danger"
-                            onClick={() => handleDelete(product.id)}
+                            onClick={() => handleDelete(product.product_id)}
                           >
                             Delete
                           </CButton>

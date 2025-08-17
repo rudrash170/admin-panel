@@ -1,7 +1,7 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
-import { cilSpeedometer, cilPuzzle, cilList, cilChartPie } from '@coreui/icons'
-import { CNavItem } from '@coreui/react'
+import { cilSpeedometer, cilPuzzle, cilList, cilChartPie, cilCloudUpload, cilPlus } from '@coreui/icons'
+import { CNavItem, CNavGroup } from '@coreui/react'
 
 const _nav = [
   {
@@ -11,10 +11,28 @@ const _nav = [
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
   },
   {
-    component: CNavItem,
+    component: CNavGroup,
     name: 'Product Management',
-    to: '/product-management/list',
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Product List',
+        to: '/product-management/list',
+      },
+      {
+        component: CNavItem,
+        name: 'Add Product',
+        to: '/product-management/add',
+        icon: <CIcon icon={cilPlus} customClassName="nav-icon" />,
+      },
+      {
+        component: CNavItem,
+        name: 'CSV Bulk Upload',
+        to: '/product-management/csv-upload',
+        icon: <CIcon icon={cilCloudUpload} customClassName="nav-icon" />,
+      },
+    ],
   },
   {
     component: CNavItem,
