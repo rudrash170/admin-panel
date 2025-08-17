@@ -21,7 +21,7 @@ export const productService = {
       const { data, error } = await supabase
         .from('products')
         .select('*')
-        .eq('id', id)
+        .eq('product_id', id)
         .single()
 
       if (error) throw error
@@ -34,19 +34,37 @@ export const productService = {
 
   async createProduct(productData) {
     try {
+      const insertData = {
+        name: productData.name,
+        description: productData.description,
+        price: productData.price,
+        categories: productData.categories,
+        created_at: new Date().toISOString()
+      }
+
+      // Add SKU if provided
+      if (productData.sku) insertData.sku = productData.sku
+
+      // Add optional ruby-specific fields if they exist
+      if (productData.carat) insertData.carat = productData.carat
+      if (productData.dimensions) insertData.dimensions = productData.dimensions
+      if (productData.shape) insertData.shape = productData.shape
+      if (productData.color) insertData.color = productData.color
+      if (productData.clarity) insertData.clarity = productData.clarity
+      if (productData.origin) insertData.origin = productData.origin
+      if (productData.treatment) insertData.treatment = productData.treatment
+      
       const { data, error } = await supabase
         .from('products')
-        .insert([{
-          name: productData.name,
-          description: productData.description,
-          price: productData.price,
-          categories: productData.categories,
-          created_at: new Date().toISOString()
-        }])
+        .insert([insertData])
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {
+        console.error('Supabase error details:', error)
+        throw error
+      }
+      
       return data
     } catch (error) {
       console.error('Error creating product:', error)
@@ -71,7 +89,7 @@ export const productService = {
       const { data, error } = await supabase
         .from('products')
         .update(updateData)
-        .eq('id', id)
+        .eq('product_id', id)
         .select()
         .single()
 
@@ -85,21 +103,13 @@ export const productService = {
 
   async deleteProduct(id) {
     try {
-      // First, get the product to get its photos
-      const product = await this.getProductById(id)
-
-      // Delete photos from storage if they exist
-      if (product?.photos?.length > 0) {
-        await Promise.all(product.photos.map((photoUrl) => this.deleteImage(photoUrl)))
-      }
-
-      // Then delete the product
       const { error } = await supabase
         .from('products')
         .delete()
-        .eq('id', id)
+        .eq('product_id', id)
 
       if (error) throw error
+      return true
     } catch (error) {
       console.error('Error deleting product:', error)
       throw error

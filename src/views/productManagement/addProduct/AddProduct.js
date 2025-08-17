@@ -23,6 +23,7 @@ import { useEffect } from 'react'
 
 const ProductAdd = () => {
   const [product, setProduct] = useState({
+    sku: '',
     name: '',
     description: '',
     price: '',
@@ -81,9 +82,9 @@ const ProductAdd = () => {
       const action = await dispatch(productActions.createProduct(productData))
       const newProduct = action.payload
 
-      if (imageFiles.length > 0 && newProduct?.id) {
+      if (imageFiles.length > 0 && newProduct?.product_id) {
         const uploadPromises = imageFiles.map((file) =>
-          dispatch(productActions.uploadImage({ file, productId: newProduct.id }))
+          dispatch(productActions.uploadImage({ file, productId: newProduct.product_id }))
         )
         // Wait for all uploads and extract payloads when available
         const results = await Promise.all(uploadPromises)
@@ -117,6 +118,18 @@ const ProductAdd = () => {
             )}
             
             <CForm onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <CFormLabel htmlFor="sku">SKU (Stock Keeping Unit)*</CFormLabel>
+                <CFormInput
+                  type="text"
+                  id="sku"
+                  placeholder="Enter unique SKU (e.g., RBY-2.5CT-OV-001)"
+                  onChange={handleChange}
+                  value={product.sku}
+                  required
+                />
+              </div>
+
               <div className="mb-3">
                 <CFormLabel htmlFor="name">Product Name*</CFormLabel>
                 <CFormInput
